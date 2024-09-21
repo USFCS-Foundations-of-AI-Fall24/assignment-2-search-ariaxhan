@@ -89,7 +89,8 @@ def drop_tool(state) :
 def use_tool(state) :
     # return a new state with the sample_extracted variable set to True
     r2 = deepcopy(state)
-    r2.sample_extracted = True
+    if r2.holding_tool and r2.loc == "sample":
+           r2.sample_extracted = True
     r2.prev = state
     return r2
 
@@ -115,22 +116,28 @@ def charge(state) :
     return r2
 
 
-action_list = [charge, drop_sample, pick_up_sample,
-               move_to_sample, move_to_battery, move_to_station]
+action_list = [charge, drop_sample, pick_up_sample, move_to_sample, move_to_battery, move_to_station,
+               pick_up_tool, drop_tool, use_tool]
 
 # goals
 def battery_goal(state) :
     return state.loc == "battery"
 
-def sample_goal(state) :
+def sample_holding_goal(state) :
     return state.holding_sample
 
 def charged_goal(state) :
     return state.charged
 
+def sample_extracted_goal(state):
+    return state.sample_extracted
+
 def mission_complete(state) :
     # returns True if we are at the battery, charged, and the sample is at the station.
-    return (battery_goal(state) and charged_goal == True and sample_goal(state) == False)
+    return (battery_goal(state) and
+        charged_goal == True and
+        sample_holding_goal(state) == False and
+        sample_extracted_goal(state) == True)
 
 if __name__=="__main__" :
     s = RoverState()
