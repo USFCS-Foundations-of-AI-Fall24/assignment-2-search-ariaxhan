@@ -18,11 +18,12 @@ from search_algorithms import breadth_first_search
 from search_algorithms import depth_first_search
 
 class RoverState :
-    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False):
+    def __init__(self, loc="station", sample_extracted=False, holding_sample=False, charged=False, holding_tool=False):
         self.loc = loc
         self.sample_extracted=sample_extracted
         self.holding_sample = holding_sample
         self.charged=charged
+        self.holding_tool = holding_tool
         self.prev = None
 
     ## you do this.
@@ -30,7 +31,8 @@ class RoverState :
        return (self.loc == other.loc and
                 self.sample_extracted == other.sample_extracted and
                 self.holding_sample == other.holding_sample and
-                self.charged == other.charged)
+                self.charged == other.charged and
+                self.holding_tool == other.holding_tool)
 
 
     def __repr__(self):
@@ -116,9 +118,9 @@ def charge(state) :
 action_list = [charge, drop_sample, pick_up_sample,
                move_to_sample, move_to_battery, move_to_station]
 
+# goals
 def battery_goal(state) :
     return state.loc == "battery"
-## add your goals here.
 
 def sample_goal(state) :
     return state.holding_sample
