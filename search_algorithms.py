@@ -10,6 +10,9 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
     search_queue.append((startState,""))
     if use_closed_list :
         closed_list[startState] = True
+
+    states_generated = 1  # Count the start state
+
     while len(search_queue) > 0 :
         ## this is a (state, "action") tuple
         next_state = search_queue.popleft()
@@ -20,9 +23,11 @@ def breadth_first_search(startState, action_list, goal_test, use_closed_list=Tru
             while ptr is not None :
                 ptr = ptr.prev
                 print(ptr)
+            print(f"BFS generated {states_generated} states.")
             return next_state
         else :
             successors = next_state[0].successors(action_list)
+            states_generated += len(successors)
             if use_closed_list :
                 successors = [item for item in successors
                                     if item[0] not in closed_list]
@@ -40,6 +45,7 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
     search_queue.append((startState,""))
     if use_closed_list :
         closed_list[startState] = True
+    states_generated = 1  # Count the start state
     while len(search_queue) > 0 :
         ## this is a (state, "action") tuple
         next_state = search_queue.pop()
@@ -50,9 +56,11 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
             while ptr is not None :
                 ptr = ptr.prev
                 print(ptr)
+            print(f"DFS generated {states_generated} states.")
             return next_state
         else :
             successors = next_state[0].successors(action_list)
+            states_generated += len(successors)
             if use_closed_list :
                 successors = [item for item in successors
                                     if item[0] not in closed_list]

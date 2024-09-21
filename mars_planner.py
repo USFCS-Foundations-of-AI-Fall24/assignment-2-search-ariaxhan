@@ -134,10 +134,10 @@ def sample_extracted_goal(state):
 
 def mission_complete(state) :
     # returns True if we are at the battery, charged, and the sample is at the station.
-    return (battery_goal(state) and
-        charged_goal == True and
-        sample_holding_goal(state) == False and
-        sample_extracted_goal(state) == True)
+    return (state.loc == "battery" and
+            state.charged == True and
+            state.holding_sample == False and
+            state.sample_extracted == True)
 
 if __name__=="__main__" :
     s = RoverState()
