@@ -51,7 +51,6 @@ class RoverState :
         ## add the name of the function also
         succ = [(item(self), item.__name__) for item in list_of_actions]
         ## remove actions that have no effect
-
         succ = [item for item in succ if not item[0] == self]
         return succ
 
