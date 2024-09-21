@@ -54,7 +54,6 @@ class RoverState :
         return succ
 
 ## our actions will be functions that return a new state.
-
 def move_to_sample(state) :
     r2 = deepcopy(state)
     r2.loc = "sample"
@@ -70,8 +69,27 @@ def move_to_battery(state) :
     r2.loc = "battery"
     r2.prev = state
     return r2
-# add tool functions here
 
+# add tool functions here
+def pick_up_tool(state) :
+    # return a new state with the holding_tool variable set to True
+    # copy the state
+    r2 = deepcopy(state)
+    r2.holding_tool = True
+    r2.prev = state
+    return r2
+def drop_tool(state) :
+    # return a new state with the holding_tool variable set to false
+    r2 = deepcopy(state)
+    r2.holding_tool = False
+    r2.prev = state
+    return r2
+def use_tool(state) :
+    # return a new state with the sample_extracted variable set to True
+    r2 = deepcopy(state)
+    r2.sample_extracted = True
+    r2.prev = state
+    return r2
 
 def pick_up_sample(state) :
     r2 = deepcopy(state)

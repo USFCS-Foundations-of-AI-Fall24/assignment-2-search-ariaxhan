@@ -61,7 +61,3 @@ def depth_first_search(startState, action_list, goal_test, use_closed_list=True,
             search_queue.extend(successors)
 
 ## add iterative deepening search here
-
-
-
-f
