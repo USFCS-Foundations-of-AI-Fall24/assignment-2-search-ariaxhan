@@ -40,30 +40,44 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
     closed_list = {}
     # put the start state into the priority queue
     search_queue.put(start_state)
+
+    # create a dictionary to keep track of cost so far for each state
+    cost_so_far = {}
+    # initialize the cost for the start state to zero
+    cost_so_far[start_state] = 0
+
     while not search_queue.empty():
-          # get the state with the lowest priority (f value)
-          current_state = search_queue.get()
+        # get the state with the lowest priority (f value)
+        current_state = search_queue.get()
+        # check if the current state is the goal
+        if goal_test(current_state):
+            # if so, reconstruct and return the path from start to goal
+            return reconstruct_path(current_state)
 
-          # check if the current state is the goal
-          if goal_test(current_state):
-              # reconstruct and return the path from start to goal
-              return reconstruct_path(current_state)
+        if use_closed_list:
+            # if we've already explored this state, skip it
+            if current_state in closed_list:
+                continue
+                # mark the current state as explored
+                closed_list[current_state] = True
 
-          if use_closed_list:
-              # if we've already explored this state, skip it
-              if current_state in closed_list:
-                  continue
-              # mark the current state as explored
-              closed_list[current_state] = True
-
-          # generate successors of the current state
-          for action, next_state, cost in current_state.get_successors():
-
-              # add the next state to the priority queue
-              search_queue.put(next_state)
+        # generate successors of the current state
+        for action, next_state, cost in current_state.get_successors():
+            # calculate the new cost to reach the next state
+            new_cost = cost_so_far[current_state] + cost
+            # if next state is unexplored or we found a cheaper path
+            if next_state not in cost_so_far or new_cost < cost_so_far[next_state]:
+                # update the cost to reach the next state
+                cost_so_far[next_state] = new_cost
+                # update the g, h, and f values of the next state
+                next_state.g = new_cost
+                next_state.h = heuristic_fn(next_state)
+                next_state.f = next_state.g + next_state.h
+                # add the next state to the priority queue
+                search_queue.put(next_state)
 
       # if we reach here, no path was found
-      return None
+    return None
 
 def reconstruct_path(state):
     # create an empty list to store the path
