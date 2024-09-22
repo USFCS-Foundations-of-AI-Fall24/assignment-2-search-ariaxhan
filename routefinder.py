@@ -69,6 +69,16 @@ def read_mars_graph(filename):
                 neighbor = parts[i]
                 distance = int(parts[i+1])
 
+                # add the neighbor node if it doesn't exist
+                if neighbor not in mars_graph.g:
+                    mars_graph.add_node(neighbor)
 
+                # add the edge from current_node to neighbor
+                edge = Edge(current_node, neighbor, distance)
+                mars_graph.add_edge(edge)
+
+                # add the reverse edge (assuming undirected graph)
+                reverse_edge = Edge(neighbor, current_node, distance)
+                mars_graph.add_edge(reverse_edge)
 
     return mars_graph
