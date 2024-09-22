@@ -1,0 +1,45 @@
+Fill in the following table in a separate PDF document.
+
+| Algorithm  | Time Complexity  | Space Complexity  | Complete?  | Optimal?  |
+|---|---|---|---|---|
+| BFS  |   |   |   |   |
+| UCS  |   |   |   |   |
+| DFS   |   |   |   |   |
+| DLS  |   |   |   |   |
+| IDS |    |   |   |   |
+|A*  |    |    |   |   |
+
+
+**Question 5: Deep Blue vs AlphaZero (10 points)**
+_Sept 20_
+
+In the late 90s, Deep Blue shocked the world by becoming the first computer to beat a human grandmaster, Garry Kasparov.
+[This paper](https://www.sciencedirect.com/science/article/pii/S0004370201001291?ref=pdf_download&fr=RR-2&rr=851930c31a9617ea)
+describes how Deep Blue was constructed - it took advantage of specialized hardware,
+along with hand-crafted heuristics and many optimizations of the alpha-beta pruning technique we've learned about.
+
+20 years later, the Google team has re-revolutionized game search with the development of AlphaZero,
+which is described [in this paper](https://arxiv.org/pdf/1712.01815.pdf).
+
+AlphaZero uses a very different approach - specifically, a deep neural network is used to learn heuristic functions
+through self-play. (We'll look at reinforcement learning later in the semester). This allows the program to learn to
+play any game, as long as it knows the state space, a goal function, and the legal actions.
+
+These articles are both pretty dense, and I don't expect you to grasp every nuance, but you should be able to read the
+introductions and get the gist of things.
+
+In your written answers, please address the following questions:
+
+a) What were the engineering advances that led to Deep Blue's success? Which of them can be transferred to other problems,
+and which are specific to chess?
+
+Deep Blue's success came from a combination of smart engineering choices.
+They built special chess chips that could analyze moves incredibly quickly, giving Deep Blue a big advantage.
+The team also improved on classic search algorithms, making them more efficient for chess.
+They loaded Deep Blue with a huge library of opening moves and endgame solutions, which helped it play strongly in crucial parts of the game.
+The program used a complex system to evaluate chess positions, with input from top players.
+While some of these advances were specific to chess, like the custom hardware, others, including the improved search methods—could be useful for solving other complex problems too.
+
+b) AlphaZero is compared to a number of modern game-playing programs, such as StockFish, which work similarly to Deep Blue.
+The paper shows that AlphaZero is able to defeat StockFish even when it is given only 1/100 of the computing time.
+Why is that? Please frame your answer in terms of search and the number of nodes evaluated.
