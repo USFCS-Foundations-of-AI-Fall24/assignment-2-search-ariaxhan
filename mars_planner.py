@@ -76,13 +76,15 @@ def pick_up_tool(state) :
     # return a new state with the holding_tool variable set to True
     # copy the state
     r2 = deepcopy(state)
-    r2.holding_tool = True
+    if state.loc == "station" and not state.holding_tool:
+        r2.holding_tool = True
     r2.prev = state
     return r2
 def drop_tool(state) :
     # return a new state with the holding_tool variable set to false
     r2 = deepcopy(state)
-    r2.holding_tool = False
+    if state.holding_tool and state.loc == "station":
+        r2.holding_tool = False
     r2.prev = state
     return r2
 def use_tool(state) :
@@ -95,7 +97,7 @@ def use_tool(state) :
 
 def pick_up_sample(state) :
     r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "sample":
+    if state.sample_extracted and state.loc == "sample" and not state.holding_sample:
         r2.holding_sample = True
     r2.prev = state
     return r2
@@ -107,9 +109,9 @@ def drop_sample(state) :
     r2.prev = state
     return r2
 
-def charge(state) :
+def charge(state):
     r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "sample":
+    if state.loc == "battery":
         r2.charged = True
     r2.prev = state
     return r2
@@ -144,3 +146,5 @@ if __name__=="__main__" :
     print("Breadth first search result", result)
     result2 = depth_first_search(s, action_list, mission_complete)
     print("Depth first search result ", result2)
+    result3 = depth_first_search(s, action_list, mission_complete, limit=15, isDLS=True)
+    print("Depth limited search result ", result3)

@@ -73,6 +73,8 @@ def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
                 next_state.g = new_cost
                 next_state.h = heuristic_fn(next_state)
                 next_state.f = next_state.g + next_state.h
+                # set the previous state for path reconstruction
+                next_state.prev_state = current_state
                 # add the next state to the priority queue
                 search_queue.put(next_state)
 
@@ -95,9 +97,19 @@ def reconstruct_path(state):
 def h1(state) :
     return 0
 
-## you do this - return the straight-line distance between the state and (1,1)
-def sld(state) :
-    sqt(a^ + b2)
+## return the straight-line distance between the state and (1,1)
+def sld(state):
+    # extract the x and y coordinates from the state's location
+    x1, y1 = map(float, state.location.split(','))
+    # coordinates of the goal (1,1)
+    x2, y2 = 1.0, 1.0
+    # calculate the differences in x and y
+    dx = x1 - x2
+    dy = y1 - y2
+    # calculate the straight-line distance using the Euclidean formula
+    distance = (dx ** 2 + dy ** 2) ** 0.5
+    # return the calculated distance
+    return distance
 
 ## you implement this. Open the file filename, read in each line,
 ## construct a Graph object and assign it to self.mars_graph().
