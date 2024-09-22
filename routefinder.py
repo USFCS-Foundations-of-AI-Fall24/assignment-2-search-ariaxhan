@@ -34,11 +34,48 @@ class map_state() :
 
 
 def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
+     # create a priority queue to hold the states to explore
     search_queue = PriorityQueue()
+    # create a dictionary to keep track of explored states
     closed_list = {}
+    # put the start state into the priority queue
     search_queue.put(start_state)
-    ## you do the rest.
+    while not search_queue.empty():
+          # get the state with the lowest priority (f value)
+          current_state = search_queue.get()
 
+          # check if the current state is the goal
+          if goal_test(current_state):
+              # reconstruct and return the path from start to goal
+              return reconstruct_path(current_state)
+
+          if use_closed_list:
+              # if we've already explored this state, skip it
+              if current_state in closed_list:
+                  continue
+              # mark the current state as explored
+              closed_list[current_state] = True
+
+          # generate successors of the current state
+          for action, next_state, cost in current_state.get_successors():
+
+              # add the next state to the priority queue
+              search_queue.put(next_state)
+
+      # if we reach here, no path was found
+      return None
+
+def reconstruct_path(state):
+    # create an empty list to store the path
+    path = []
+    # traverse from the goal state back to the start state
+    while state is not None:
+        # insert the state at the beginning of the path
+        path.insert(0, state)
+        # move to the previous state
+        state = state.prev_state
+    # return the complete path
+    return path
 
 ## default heuristic - we can use this to implement uniform cost search
 def h1(state) :
