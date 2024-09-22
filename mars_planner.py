@@ -37,8 +37,9 @@ class RoverState :
 
     def __repr__(self):
         return (f"Location: {self.loc}\n" +
-                f"Sample Extracted?: {self.sample_extracted}\n"+
+                f"Sample Extracted?: {self.sample_extracted}\n" +
                 f"Holding Sample?: {self.holding_sample}\n" +
+                f"Holding Tool?: {self.holding_tool}\n" +
                 f"Charged? {self.charged}")
 
     def __hash__(self):
@@ -55,67 +56,89 @@ class RoverState :
         return succ
 
 ## our actions will be functions that return a new state.
-def move_to_sample(state) :
-    r2 = deepcopy(state)
-    r2.loc = "sample"
-    r2.prev=state
-    return r2
-def move_to_station(state) :
-    r2 = deepcopy(state)
-    r2.loc = "station"
-    r2.prev = state
-    return r2
-def move_to_battery(state) :
-    r2 = deepcopy(state)
-    r2.loc = "battery"
-    r2.prev = state
-    return r2
+def move_to_sample(state):
+    if state.loc != "sample":
+        r2 = deepcopy(state)
+        r2.loc = "sample"
+        r2.prev = state
+        return r2
+    else:
+        return state  # No change
+
+def move_to_station(state):
+    if state.loc != "station":
+        r2 = deepcopy(state)
+        r2.loc = "station"
+        r2.prev = state
+        return r2
+    else:
+        return state
+
+def move_to_battery(state):
+    if state.loc != "battery":
+        r2 = deepcopy(state)
+        r2.loc = "battery"
+        r2.prev = state
+        return r2
+    else:
+        return state
+
 
 # add tool functions here
 def pick_up_tool(state) :
     # return a new state with the holding_tool variable set to True
-    # copy the state
-    r2 = deepcopy(state)
     if state.loc == "station" and not state.holding_tool:
-        r2.holding_tool = True
-    r2.prev = state
-    return r2
+          r2 = deepcopy(state)
+          r2.holding_tool = True
+          r2.prev = state
+          return r2
+    else:
+          return state
 def drop_tool(state) :
     # return a new state with the holding_tool variable set to false
-    r2 = deepcopy(state)
     if state.holding_tool and state.loc == "station":
-        r2.holding_tool = False
-    r2.prev = state
-    return r2
+         r2 = deepcopy(state)
+         r2.holding_tool = False
+         r2.prev = state
+         return r2
+    else:
+         return state
 def use_tool(state) :
     # return a new state with the sample_extracted variable set to True
-    r2 = deepcopy(state)
-    if r2.holding_tool and r2.loc == "sample":
-           r2.sample_extracted = True
-    r2.prev = state
-    return r2
+    if state.holding_tool and state.loc == "sample" and not state.sample_extracted:
+        r2 = deepcopy(state)
+        r2.sample_extracted = True
+        r2.prev = state
+        return r2
+    else:
+        return state
 
 def pick_up_sample(state) :
-    r2 = deepcopy(state)
     if state.sample_extracted and state.loc == "sample" and not state.holding_sample:
+        r2 = deepcopy(state)
         r2.holding_sample = True
-    r2.prev = state
-    return r2
+        r2.prev = state
+        return r2
+    else:
+        return state
 
 def drop_sample(state) :
-    r2 = deepcopy(state)
-    if state.sample_extracted and state.loc == "station":
+    if state.holding_sample and state.loc == "station":
+        r2 = deepcopy(state)
         r2.holding_sample = False
-    r2.prev = state
-    return r2
+        r2.prev = state
+        return r2
+    else:
+        return state
 
 def charge(state):
-    r2 = deepcopy(state)
-    if state.loc == "battery":
+    if state.loc == "battery" and not state.charged:
+        r2 = deepcopy(state)
         r2.charged = True
-    r2.prev = state
-    return r2
-
+        r2.prev = state
+        return r2
+    else:
+        return state
 
 action_list = [charge, drop_sample, pick_up_sample, move_to_sample, move_to_battery, move_to_station,
                pick_up_tool, drop_tool, use_tool]
@@ -146,5 +169,5 @@ if __name__=="__main__" :
     print("Breadth first search result", result)
     result2 = depth_first_search(s, action_list, mission_complete)
     print("Depth first search result ", result2)
-    result3 = depth_first_search(s, action_list, mission_complete, limit=15, isDLS=True)
+    result3 = depth_first_search(s, action_list, mission_complete, limit=10, isDLS=True)
     print("Depth limited search result ", result3)

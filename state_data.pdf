@@ -1,0 +1,158 @@
+Modify your search code so that it instead solves three subproblems: moveToSample, removeSample, and returnToCharger.
+You can do this by changing the start state and goal test. How does this change the number of states generated?
+
+Please add a PDF to your repo with the state data for each of the questions above.
+
+Before modification:
+
+(base) ariahan@Arias-MacBook-Air assignment-2-search-ariaxhan % python mars_planner.py
+Goal found
+(Location: battery
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? True, 'charge')
+Location: battery
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: sample
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: sample
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: station
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: station
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: False
+Charged? False
+None
+------BFS generated 23 states.------
+Breadth first search result (Location: battery
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? True, 'charge')
+Goal found
+(Location: battery
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: False
+Charged? True, 'move_to_battery', 8)
+Location: station
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: False
+Charged? True
+Location: station
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: sample
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: sample
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: battery
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: battery
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: station
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: station
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: False
+Charged? False
+None
+-------DFS generated 19 states.------
+Depth first search result  (Location: battery
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: False
+Charged? True, 'move_to_battery', 8)
+Goal found
+(Location: battery
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: False
+Charged? True, 'move_to_battery', 8)
+Location: station
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: False
+Charged? True
+Location: station
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: sample
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: sample
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: battery
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? True
+Location: battery
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: station
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: True
+Charged? False
+Location: station
+Sample Extracted?: False
+Holding Sample?: False
+Holding Tool?: False
+Charged? False
+None
+------DLS generated 19 states.------
+Depth limited search result  (Location: battery
+Sample Extracted?: True
+Holding Sample?: False
+Holding Tool?: False
+Charged? True, 'move_to_battery', 8)
+
+BFS: 23
+DFS: 19
+DLS: 19
+
+After modification:
