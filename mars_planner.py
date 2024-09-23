@@ -178,7 +178,7 @@ def mission_complete(state) :
             state.holding_sample == False and
             state.sample_extracted == True)
 
-if __name__ == "__main__":
+def main():
     s = RoverState()
 
     # Full Problem Solutions
@@ -238,3 +238,6 @@ if __name__ == "__main__":
         print("Subproblem 3 DFS Result:", result_sub3_dfs)
     else:
         print("Subproblem 2 DFS failed; cannot proceed to Subproblem 3 DFS")
+
+if __name__ == "__main__":
+    main()
