@@ -45,3 +45,12 @@ While some of these advances were specific to chess, like the custom hardware, o
 b) AlphaZero is compared to a number of modern game-playing programs, such as StockFish, which work similarly to Deep Blue.
 The paper shows that AlphaZero is able to defeat StockFish even when it is given only 1/100 of the computing time.
 Why is that? Please frame your answer in terms of search and the number of nodes evaluated.
+
+AlphaZero's superior performance over StockFish, despite using less computing time,
+is primarily due to its efficient search strategy. While StockFish employs a brute-force approach,
+evaluating approximately 70 million nodes per second, AlphaZero's neural network-guided search examines
+only about 80,000 nodes per second. This vast difference in nodes evaluated highlights AlphaZero's
+selective search capability. By using its neural network to identify promising moves,
+AlphaZero effectively prunes the search tree, focusing on a much smaller but more relevant
+set of nodes. This allows AlphaZero to search more deeply along critical lines while evaluating
+far fewer total nodes, ultimately leading to stronger play despite the reduced computational effort.
