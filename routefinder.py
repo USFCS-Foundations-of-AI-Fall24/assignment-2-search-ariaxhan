@@ -1,5 +1,5 @@
 from queue import PriorityQueue
-from Graph import Graph, Edge
+from Graph import Graph, Edge, Node
 
 class map_state() :
     ## f = total estimated cost
@@ -32,54 +32,48 @@ class map_state() :
     def is_goal(self):
         return self.location == '1,1'
 
+    def get_successors(self):
+        successors = []
+        if self.mars_graph is not None and self.location in self.mars_graph.g:
+            for edge in self.mars_graph.g[self.location]:
+                cost = edge.val
+                new_state = map_state(edge.dest, self.mars_graph, self, self.g + cost)
+                successors.append(("move", new_state, cost))
+        return successors
 
-def a_star(start_state, heuristic_fn, goal_test, use_closed_list=True) :
-     # create a priority queue to hold the states to explore
+
+
+def a_star(start_state, heuristic_fn, goal_test_fn, use_closed_list=True):
     search_queue = PriorityQueue()
-    # create a dictionary to keep track of explored states
-    closed_list = {}
-    # put the start state into the priority queue
+    closed_list = set()
     search_queue.put(start_state)
+    states_generated = 1  # Count the start state
 
-    # create a dictionary to keep track of cost so far for each state
-    cost_so_far = {}
-    # initialize the cost for the start state to zero
-    cost_so_far[start_state] = 0
+    cost_so_far = {start_state: 0}
 
     while not search_queue.empty():
-        # get the state with the lowest priority (f value)
         current_state = search_queue.get()
-        # check if the current state is the goal
-        if goal_test(current_state):
-            # if so, reconstruct and return the path from start to goal
-            return reconstruct_path(current_state)
+
+        if goal_test_fn(current_state):
+            return reconstruct_path(current_state), states_generated
 
         if use_closed_list:
-            # if we've already explored this state, skip it
             if current_state in closed_list:
                 continue
-                # mark the current state as explored
-                closed_list[current_state] = True
+            closed_list.add(current_state)
 
-        # generate successors of the current state
         for action, next_state, cost in current_state.get_successors():
-            # calculate the new cost to reach the next state
             new_cost = cost_so_far[current_state] + cost
-            # if next state is unexplored or we found a cheaper path
             if next_state not in cost_so_far or new_cost < cost_so_far[next_state]:
-                # update the cost to reach the next state
                 cost_so_far[next_state] = new_cost
-                # update the g, h, and f values of the next state
                 next_state.g = new_cost
                 next_state.h = heuristic_fn(next_state)
                 next_state.f = next_state.g + next_state.h
-                # set the previous state for path reconstruction
                 next_state.prev_state = current_state
-                # add the next state to the priority queue
                 search_queue.put(next_state)
+                states_generated += 1  # Count each newly generated state
 
-      # if we reach here, no path was found
-    return None
+    return None, states_generated
 
 def reconstruct_path(state):
     # create an empty list to store the path
@@ -116,60 +110,66 @@ def sld(state):
 def read_mars_graph(filename):
     mars_graph = Graph()
 
-    # open the file and read each line
     with open(filename, 'r') as file:
         for line in file:
-            # split into parts
-            parts = line.strip().split()
-            # current node is first part
+            parts = line.strip().split(': ')
             current_node = parts[0]
+            neighbors = parts[1].split() if len(parts) > 1 else []
 
-            # add the current node to the graph
             mars_graph.add_node(current_node)
 
-            # process the neighbors and their distances
-            for i in range(1, len(parts), 2):
-                neighbor = parts[i]
-                distance = int(parts[i+1])
-
-                # add the neighbor node if it doesn't exist
+            for neighbor in neighbors:
                 if neighbor not in mars_graph.g:
                     mars_graph.add_node(neighbor)
 
-                # add the edge from current_node to neighbor
-                edge = Edge(current_node, neighbor, distance)
+                # Calculate Euclidean distance
+                x1, y1 = map(float, current_node.split(','))
+                x2, y2 = map(float, neighbor.split(','))
+                distance = ((x2 - x1)**2 + (y2 - y1)**2)**0.5
+
+                edge = Edge(current_node, neighbor, int(distance))
                 mars_graph.add_edge(edge)
 
-                # add the reverse edge (assuming undirected graph)
-                reverse_edge = Edge(neighbor, current_node, distance)
-                mars_graph.add_edge(reverse_edge)
+                # Add reverse edge if it doesn't exist
+                if not mars_graph.get_edge(neighbor, current_node):
+                    reverse_edge = Edge(neighbor, current_node, int(distance))
+                    mars_graph.add_edge(reverse_edge)
 
     return mars_graph
+
+def is_goal_state(state):
+    return state.is_goal()
+
+def count_states(search_queue, closed_list):
+    return search_queue.qsize() + len(closed_list)
 
 
 # c) **(5 points)** _Sept 18_ Run both A* and uniform cost search (i.e. using h1: h=0 for all states)
 # on the MarsMap and count the number of states generated. Add this to your results.
 
 def run(start_location):
-    # Read the Mars graph
-    mars_graph = read_mars_graph("marsmap.docx")
-
-    # Create the initial state
+    mars_graph = read_mars_graph("marsmap.txt")
+    print(f"Start location: {start_location}")
     start_state = map_state(location=start_location, mars_graph=mars_graph)
 
-
-    # Run A* search
     print("Running A* search...")
+    astar_path, astar_states_generated = a_star(start_state, sld, is_goal_state, use_closed_list=True)
 
+    if astar_path:
+        print(f"A* search generated {astar_states_generated} states")
+        print(f"A* path length: {len(astar_path)}")
+        print("A* path:", [state.location for state in astar_path])
+    else:
+        print("A* did not find a path")
 
-    print(f"A* search generated {astar_states_generated} states")
-    print("A* path:", [state.location for state in astar_path])
+    start_state = map_state(location=start_location, mars_graph=mars_graph)
 
-    # Reset for Uniform Cost Search
-
-    # Run Uniform Cost Search (using h1 heuristic)
     print("\nRunning Uniform Cost Search...")
+    ucs_path, ucs_states_generated = a_star(start_state, h1, is_goal_state, use_closed_list=True)
 
-
-    print(f"Uniform Cost Search generated {ucs_states_generated} states")
-    print("Uniform Cost Search path:", [state.location for state in ucs_path])
+    if ucs_path:
+        print(f"Uniform Cost Search generated {ucs_states_generated} states")
+        print(f"UCS path length: {len(ucs_path)}")
+        print("UCS path:", [state.location for state in ucs_path])
+    else:
+       print("UCS did not find a path")

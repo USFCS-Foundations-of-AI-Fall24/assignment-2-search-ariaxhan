@@ -180,9 +180,6 @@ def mission_complete(state) :
 
 def main():
     s = RoverState()
-
-    # Full Problem Solutions
-    print("Full Problem Solutions")
     # BFS
     result_bfs = breadth_first_search(s, action_list, mission_complete)
     print("Breadth First Search Result:", result_bfs)
