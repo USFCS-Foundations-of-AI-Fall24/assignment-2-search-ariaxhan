@@ -145,3 +145,31 @@ def read_mars_graph(filename):
                 mars_graph.add_edge(reverse_edge)
 
     return mars_graph
+
+
+# c) **(5 points)** _Sept 18_ Run both A* and uniform cost search (i.e. using h1: h=0 for all states)
+# on the MarsMap and count the number of states generated. Add this to your results.
+
+def run(start_location):
+    # Read the Mars graph
+    mars_graph = read_mars_graph("marsmap.docx")
+
+    # Create the initial state
+    start_state = map_state(location=start_location, mars_graph=mars_graph)
+
+
+    # Run A* search
+    print("Running A* search...")
+
+
+    print(f"A* search generated {astar_states_generated} states")
+    print("A* path:", [state.location for state in astar_path])
+
+    # Reset for Uniform Cost Search
+
+    # Run Uniform Cost Search (using h1 heuristic)
+    print("\nRunning Uniform Cost Search...")
+
+
+    print(f"Uniform Cost Search generated {ucs_states_generated} states")
+    print("Uniform Cost Search path:", [state.location for state in ucs_path])
