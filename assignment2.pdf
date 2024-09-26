@@ -3,14 +3,16 @@ Fill in the following table in a separate PDF document.
 | Algorithm  | Time Complexity  | Space Complexity  | Complete?  | Optimal?  |
 |---|---|---|---|---|
 | BFS  | O(b^(d+1))  |  O(b^(d+1))  | yes  |  yes (assuming actions have uniform cost) |
-| UCS  |   |   |   |   |
+| UCS  | O(b^1+[C/e])  | O(b^1+[C/e]) (russell and norvig)  |  yes | cost-optimal, yes  |
 | DFS   | O(b^n)  | (O(bn))  | only on a finite graph  | no  |
-| DLS  |   |   |   |   |
+| DLS  | O(b^l)  |  O(bl) (russell and norvig) |  no |  no |
 | IDS |  O(b^d)  | (O(bn))  | no?  |  yes |
 | A*  |   O(b^n)   |   O(b^n)   |  yes (if heuristic is admissible)  |  yes (if heuristic is admissible) |
 
 b: branching factor (maximum number of successors per node)
 d: depth of the shallowest goal node
+l: depth limit
+e : lower bound e > 0
 
 **Question 5: Deep Blue vs AlphaZero (10 points)**
 _Sept 20_
